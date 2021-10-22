@@ -4,9 +4,6 @@ import { useField, useFormikContext } from "formik";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
-  row: {
-    display: "flex",
-  },
   error: {
     color: "red",
     display: "flex",
@@ -19,21 +16,13 @@ const CheckboxWrapper = ({ name, label }) => {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
 
-  const configCheckbox = {
-    ...field,
-    onChange: (e) => setFieldValue(name, e.target.checked),
-  };
-
-  const configFormControl = {};
-
-  if (meta && meta.touched && meta.error) {
-    configFormControl.error = true;
-  }
-
   return (
-    <FormControl {...configFormControl}>
+    <FormControl>
       <FormGroup>
-        <FormControlLabel control={<Checkbox {...configCheckbox} />} label={label} />
+        <FormControlLabel
+          control={<Checkbox {...field} onChange={(e) => setFieldValue(name, e.target.checked)} />}
+          label={label}
+        />
         {meta.touched && meta.error ? <FormHelperText className={classes.error}>{meta.error}</FormHelperText> : null}
       </FormGroup>
     </FormControl>

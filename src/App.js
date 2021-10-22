@@ -1,17 +1,17 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
+import { TextField, Button, Dialog } from "@material-ui/core";
 import Checkbox from "./components/Checkbox";
 import { Formik } from "formik";
 import * as yup from "yup";
+import countries from "./countries.json";
+import Select from "./components/Select";
+import Radio from "./components/Radio";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
     padding: theme.spacing(2),
 
@@ -38,6 +38,8 @@ function App() {
       .string()
       .oneOf([yup.ref("password"), null], "Hasła muszą się zgadzać")
       .required("Proszę potwierdzić hasło"),
+    country: yup.string().required("Proszę wybrać państwo"),
+    options: yup.string().required("Proszę wybrać opcję"),
     terms: yup.boolean().required().oneOf([true], "Proszę zaakceptować warunki"),
   });
 
@@ -53,6 +55,8 @@ function App() {
           phone: "",
           password: "",
           confirmPassword: "",
+          country: "",
+          options: "",
           terms: false,
         }}
         validationSchema={validationSchema}
@@ -67,6 +71,7 @@ function App() {
                 label="Imię"
                 variant="filled"
                 name="firstName"
+                {...formik.getFieldProps("firstName")}
                 error={formik.touched.firstName && Boolean(formik.errors.firstName)}
                 helperText={formik.touched.firstName && formik.errors.firstName}
                 autoComplete="off"
@@ -119,13 +124,15 @@ function App() {
                 autoComplete="off"
               />
             </div>
-            <Checkbox name="terms" label="Akceptuję warunki umowy" />
             <div>
-              <Button variant="contained">Anuluj</Button>
-              <Button type="submit" variant="contained" color="primary">
-                Zarejestruj
-              </Button>
+              <Select name="country" label="Państwo" options={countries} />
+
+              <Radio name="options" />
             </div>
+            <Checkbox name="terms" label="Akceptuję warunki umowy" />
+            <Button type="submit" variant="contained" color="primary">
+              Zarejestruj
+            </Button>
           </form>
         )}
       </Formik>
